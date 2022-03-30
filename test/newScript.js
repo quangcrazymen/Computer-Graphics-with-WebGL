@@ -23,6 +23,10 @@ init=()=>{
     const ball = getSphere(1)
     ball.name = 'ball'
     scene.add(ball)
+    //Add ball 2
+    const ball2=getSphere(1)
+    ball2.name='ball-2'
+    scene.add(ball2)
     //Add plane
     const plane = getPlane(10)
     scene.add(plane)
@@ -125,6 +129,36 @@ getGridOfBoxes = (amount,separationMultiplier)=>{
 }
 
 var toggle = 0
+var toggle2 = 0
+// function moveRight() {
+//     v = new THREE.Vector3(0, 0, 0.01)
+//     rads = THREE.Math.degToRad(totalrotation)
+//     v.applyAxisAngle( new THREE.Vector3(0, 1, 0), rads);
+//     object.position.add(v)
+// }
+
+DegreeDownRight = (object)=>{
+    totalrotation=45
+    v = new THREE.Vector3(0, 0, 0.1)
+    rads = THREE.Math.degToRad(totalrotation)
+    v.applyAxisAngle( new THREE.Vector3(0, 1, 0), rads);
+    object.position.add(v)
+}
+DegreeUpLeft = (object)=>{
+    totalrotation=45
+    v = new THREE.Vector3(0, 0, -0.1)
+    rads = THREE.Math.degToRad(totalrotation)
+    v.applyAxisAngle( new THREE.Vector3(0, 1, 0), rads);
+    object.position.add(v)
+}
+DegreeUpRight=()=>{
+
+}
+
+DegreeDownLeft=()=>{
+    
+}
+
 update= (renderer,scene,camera)=>{
     renderer.render(
         scene,
@@ -133,9 +167,31 @@ update= (renderer,scene,camera)=>{
     //const square = scene.getObjectByName('square')
     //square.rotation.x+=0.005
     const ball = scene.getObjectByName('ball')
+    const ball2 = scene.getObjectByName('ball-2')
     const plane = scene.getObjectByName('plane')
 
-    //ball.position.x+=0.2
+    // move ball in 45 degree: https://stackoverflow.com/questions/65534926/three-js-move-object-using-vector-with-applied-angle
+    const planeWidth = plane.geometry.parameters.width
+    if(toggle2 === 0){
+        if(ball2.position.x>=plane.geometry.parameters.width/2){
+            toggle2 = 1
+            //ball.position.x-=1
+        }
+        else{
+            DegreeDownRight(ball2)  
+        }
+    }
+    if(toggle2 ===1){
+        if(ball2.position.x<=-plane.geometry.parameters.width/2){
+            toggle2 = 0
+            //ball.position.x-=1
+        }
+        else{
+            DegreeUpLeft(ball2)
+        }
+    }
+    console.log(toggle2)
+    
     if(toggle === 0){
         if(ball.position.x>=plane.geometry.parameters.width/2){
             toggle = 1
@@ -155,14 +211,11 @@ update= (renderer,scene,camera)=>{
         }
     }
     console.log(ball.position)
-    console.log(toggle)
+    // console.log(toggle)
     
 
     //ball.position.x+=0.2
     requestAnimationFrame(()=>update(renderer,scene,camera))
 }
 
-
-
 init()
-console.log(THREE)
